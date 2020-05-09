@@ -76,7 +76,7 @@ def search_dirs(path_left, path_right):
     for elem in common:
         pl = os.path.join(path_left, elem)
         pr = os.path.join(path_right, elem)
-        missing_left_tmp, missing_right_tmp = search_dirs(pr, pl)
+        missing_left_tmp, missing_right_tmp = search_dirs(pl, pr)
         missing_left.extend(missing_left_tmp)
         missing_right.extend(missing_right_tmp)
     return missing_left, missing_right 
