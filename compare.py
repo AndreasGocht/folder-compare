@@ -15,7 +15,7 @@ def list_path(path):
             elif entry.is_dir():
                 dirs.append(entry.name)
             else:
-                RuntimeError("neither dir nor file")
+                RuntimeError("neither dir nor file: {} in {}".format(entry, path))
     return (dirs,files)
 
 def search_missing(base, comp):
@@ -33,11 +33,11 @@ def combine_and_add_path(missing_dirs, missing_files, path):
     missing = []
     
     for elem in missing_dirs:
-        elem_tmp = path + "\\" + elem
+        elem_tmp = os.path.join(path,elem)
         missing.append(elem_tmp)
         
     for elem,_ in missing_files:
-        elem_tmp = path + "\\" + elem
+        elem_tmp = os.path.join(path,elem)
         missing.append(elem_tmp)        
 
     return missing
@@ -74,17 +74,13 @@ def compare_and_print(path_left, path_right):
 def search_dirs(path_left, path_right):
     common, missing_left, missing_right = compare_and_print(path_left, path_right)
     for elem in common:
-        missing_left_tmp, missing_right_tmp = search_dirs(path_left + "\\" + elem, path_right + "\\" + elem)
+        pl = os.path.join(path_left, elem)
+        pr = os.path.join(path_right, elem)
+        missing_left_tmp, missing_right_tmp = search_dirs(pr, pl)
         missing_left.extend(missing_left_tmp)
         missing_right.extend(missing_right_tmp)
     return missing_left, missing_right 
-            
-
-if path_right[-1] == "\\":
-    path_right = path_right[:-1]
-if path_left[-1] == "\\":
-    path_left = path_left[:-1]
-    
+                
 missing_left, missing_right  = search_dirs(path_left, path_right)
 
 print("================missing left:================")
