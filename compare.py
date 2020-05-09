@@ -11,7 +11,7 @@ def list_path(path):
     with os.scandir(path) as it:
         for entry in it:
             if entry.is_file():
-                files.append(entry.name)
+                files.append((entry.name,entry.stat().st_size))
             elif entry.is_dir():
                 dirs.append(entry.name)
             else:
@@ -31,9 +31,15 @@ def search_missing(base, comp):
 
 def combine_and_add_path(missing_dirs, missing_files, path):
     missing = []
-    for elem in missing_dirs + missing_files:
+    
+    for elem in missing_dirs:
         elem_tmp = path + "\\" + elem
         missing.append(elem_tmp)
+        
+    for elem,_ in missing_files:
+        elem_tmp = path + "\\" + elem
+        missing.append(elem_tmp)        
+
     return missing
 
 
